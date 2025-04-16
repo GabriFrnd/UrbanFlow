@@ -11,7 +11,7 @@ const HomeScreen = () => {
     <View style={globalStyles.container}>
       <Header />
       <ScrollView>
-        <SearchBar />
+        <SearchBar/>
         <TransportOptions />
         <FavoriteRoutes />
       </ScrollView>

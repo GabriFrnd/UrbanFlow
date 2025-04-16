@@ -2,10 +2,15 @@ import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { globalStyles } from '../styles';
 
-const Button = ({ title, onPress }) => {
+const Button = ({ title, onPress, style, textStyle }) => {
   return (
-    <TouchableOpacity style={globalStyles.button} onPress={onPress}>
-      <Text style={globalStyles.buttonText}>{title}</Text>
+    <TouchableOpacity
+      style={[globalStyles.transportButton, style]}
+      onPress={onPress}
+    >
+      <Text style={[globalStyles.transportButtonText, textStyle]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
