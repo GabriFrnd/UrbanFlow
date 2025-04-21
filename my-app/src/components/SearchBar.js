@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, Image } from 'react-native';
 import { globalStyles } from '../styles/index';
 import { useNavigation } from '@react-navigation/native';
+import locIcon from '../assets/icons/loc.png';
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
   const navigation = useNavigation();
 
-  const handleTextChange = (text) => {
-    setSearchText(text);
-    if (text.length > 0) {
-      navigation.navigate('Transport', { searchQuery: text });
+  const handleSubmit = () => {
+    if (searchText.trim().length > 0) {
+      navigation.navigate('Transport', { searchQuery: searchText });
     }
   };
 
@@ -19,11 +19,13 @@ const SearchBar = () => {
       <TextInput
         style={globalStyles.searchInput}
         placeholder="Para onde deseja ir?"
-        placeholderTextColor="#666"
+        placeholderTextColor="#8c8c8c"
         value={searchText}
-        onChangeText={handleTextChange}
-        autoFocus={true}
+        onChangeText={setSearchText}
+        onSubmitEditing={handleSubmit} 
+        returnKeyType="search"
       />
+      <Image source={locIcon} style={globalStyles.searchIcon} />
     </View>
   );
 };

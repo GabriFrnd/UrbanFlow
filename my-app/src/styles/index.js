@@ -7,6 +7,13 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: '#EAE2D6',
     padding: 16,
   },
+
+  containerTransparent: {
+    marginTop: 4,
+    flex: 1,
+    padding: 16,
+  },
+  
   header: {
     marginHorizontal: -20,
     backgroundColor: '#C2A477',
@@ -30,21 +37,27 @@ export const globalStyles = StyleSheet.create({
     marginBottom: 1
   },
   searchContainer: {
+    height: 39,
     marginVertical: 10,
     padding: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   searchInput: {
+    flex: 1,
+    textAlign: 'center',
     height: 40,
     fontSize: 16,
   },
-  transportContainer: {
-    backgroundColor: '#C2A477',
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 10,
+
+  searchIcon: {
+    width: 18, 
+    height: 18,
   },
+  
   routeTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -146,6 +159,14 @@ export const globalStyles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#EAE2D6',
   },
+
+  headerContainerTransparent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+
   closeButton: {
     marginRight: 12,
   },
@@ -160,4 +181,22 @@ export const globalStyles = StyleSheet.create({
     color: '#000',
     fontFamily: 'Kantumruy Pro',
   },
+
+  bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#C2A477',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  
 });
