@@ -1,0 +1,44 @@
+[
+  {
+    "type": "metro",
+    "title": "Estação 114 Sul",
+    "description": "Metrô - Linha Laranja",
+    "coordinate": { "latitude": -15.8301, "longitude": -47.9205 },
+    "icon": "../assets/icons/metro.png"
+  },
+  {
+    "type": "metro",
+    "title": "Estação Galeria",
+    "description": "Metrô - Integração Central",
+    "coordinate": { "latitude": -15.7905, "longitude": -47.8948 },
+    "icon": "../assets/icons/metro.png"
+  },
+  {
+    "type": "onibus",
+    "title": "Ponto de Ônibus 212 Sul",
+    "description": "Sentido Rodoviária",
+    "coordinate": { "latitude": -15.8307, "longitude": -47.9180 },
+    "icon": "../assets/icons/onibus.png"
+  },
+  {
+    "type": "onibus",
+    "title": "Ponto de Ônibus 308 Sul",
+    "description": "Sentido L2 Sul",
+    "coordinate": { "latitude": -15.8375, "longitude": -47.9115 },
+    "icon": "../assets/icons/onibus.png"
+  },
+  {
+    "type": "bike",
+    "title": "Estação de Bike CLS 308",
+    "description": "Bicicletas compartilhadas",
+    "coordinate": { "latitude": -15.8365, "longitude": -47.9123 },
+    "icon": "../assets/icons/bicicleta.png"
+  },
+  {
+    "type": "bike",
+    "title": "Estação de Bike CLS 210",
+    "description": "Bicicletas compartilhadas",
+    "coordinate": { "latitude": -15.8235, "longitude": -47.9242 },
+    "icon": "../assets/icons/bicicleta.png"
+  }
+]
