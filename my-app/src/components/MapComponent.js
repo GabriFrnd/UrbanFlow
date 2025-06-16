@@ -31,9 +31,9 @@ const MapComponent = ({
         {...(isNavigating
           ? {
               followUserLocation: true,
-              followHeading: 1,
-              followZoomLevel: 16,
-              followPitch: 60,
+              followUserMode: 'compass', // Segue a orientação do dispositivo (melhor para navegação)
+              followZoomLevel: 17,      // Mais zoom para ver detalhes da rua
+              followPitch: 65,          // Maior inclinação para um efeito 3D
               animationMode: 'flyTo',
               animationDuration: 1500,
             }
