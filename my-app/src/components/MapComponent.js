@@ -13,10 +13,15 @@ export const toGeoJSON = (points = []) => ({
 
 const MapComponent = ({
   userLocation,
+  centerCoordinate,
+  bounds, // Nova prop com os limites para o zoom
   busStops,
   metroStations,
   bikePoints,
+  selectedTransport,
+  selectedPointId,
   route,
+  previewRoute,
   isNavigating,
   onPointPress,
 }) => {
@@ -25,41 +30,80 @@ const MapComponent = ({
   const metroStationsGeoJSON = toGeoJSON(metroStations);
   const bikePointsGeoJSON = toGeoJSON(bikePoints);
 
+  const highlightStyle = (defaultColor) => ({
+    circleRadius: ['case', ['==', ['get', 'id'], selectedPointId || ''], 12, 8],
+    circleColor: defaultColor,
+    circleStrokeColor: '#000',
+    circleStrokeWidth: ['case', ['==', ['get', 'id'], selectedPointId || ''], 3, 0],
+  });
+
+  // Função para decidir a configuração da câmera
+  const getCameraConfig = () => {
+    if (isNavigating) {
+      return {
+        followUserLocation: true,
+        followUserMode: 'compass',
+        followZoomLevel: 17,
+        followPitch: 65,
+        animationMode: 'flyTo',
+        animationDuration: 1500,
+      };
+    }
+    if (bounds) {
+      return {
+        fitBounds: [bounds.ne, bounds.sw], // Ajusta a câmera aos limites da rota
+        padding: { paddingTop: 100, paddingBottom: 280, paddingLeft: 50, paddingRight: 50 }, // Margens
+        animationMode: 'flyTo',
+        animationDuration: 1200,
+      };
+    }
+    return {
+      zoomLevel: 15,
+      centerCoordinate: centerCoordinate || userLocation,
+      pitch: 0,
+      animationMode: 'flyTo',
+      animationDuration: 2000,
+    };
+  };
+
   return (
     <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Streets} scaleBarEnabled={false}>
-      <Mapbox.Camera
-        {...(isNavigating
-          ? {
-              followUserLocation: true,
-              followUserMode: 'compass', // Segue a orientação do dispositivo (melhor para navegação)
-              followZoomLevel: 17,      // Mais zoom para ver detalhes da rua
-              followPitch: 65,          // Maior inclinação para um efeito 3D
-              animationMode: 'flyTo',
-              animationDuration: 1500,
-            }
-          : {
-              zoomLevel: 14,
-              centerCoordinate: userLocation,
-              pitch: 0, // Garante a visão de cima
-              animationMode: 'flyTo',
-              animationDuration: 2000,
-            }
-        )}
-      />
+      <Mapbox.Camera {...getCameraConfig()} />
 
       <Mapbox.UserLocation />
-      <Mapbox.ShapeSource id="bus-source" shape={busStopsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-        <Mapbox.CircleLayer id="bus-circles" style={{ circleRadius: 8, circleColor: 'blue' }} />
-      </Mapbox.ShapeSource>
 
-      <Mapbox.ShapeSource id="metro-source" shape={metroStationsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-        <Mapbox.CircleLayer id="metro-circles" style={{ circleRadius: 8, circleColor: 'green' }} />
-      </Mapbox.ShapeSource>
+      {selectedTransport === 'onibus' && (
+        <Mapbox.ShapeSource id="bus-source" shape={busStopsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
+          <Mapbox.CircleLayer id="bus-circles" style={highlightStyle('blue')} />
+        </Mapbox.ShapeSource>
+      )}
 
-      <Mapbox.ShapeSource id="bike-source" shape={bikePointsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-        <Mapbox.CircleLayer id="bike-circles" style={{ circleRadius: 8, circleColor: 'red' }} />
-      </Mapbox.ShapeSource>
+      {selectedTransport === 'metro' && (
+        <Mapbox.ShapeSource id="metro-source" shape={metroStationsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
+          <Mapbox.CircleLayer id="metro-circles" style={highlightStyle('green')} />
+        </Mapbox.ShapeSource>
+      )}
 
+      {selectedTransport === 'bike' && (
+        <Mapbox.ShapeSource id="bike-source" shape={bikePointsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
+          <Mapbox.CircleLayer id="bike-circles" style={highlightStyle('red')} />
+        </Mapbox.ShapeSource>
+      )}
+
+      {previewRoute && !isNavigating && (
+        <Mapbox.ShapeSource id="preview-route-source" shape={previewRoute}>
+          <Mapbox.LineLayer
+            id="preview-route-layer"
+            style={{
+              lineColor: '#5a9dfc',
+              lineWidth: 5,
+              lineOpacity: 0.8,
+              lineDasharray: [2, 2.5],
+            }}
+          />
+        </Mapbox.ShapeSource>
+      )}
+      
       {route && (
         <Mapbox.ShapeSource id="route-source" shape={route}>
           <Mapbox.LineLayer

@@ -1,28 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, TextInput, Image } from 'react-native';
 import { globalStyles } from '../styles/index';
-import { useNavigation } from '@react-navigation/native';
 import locIcon from '../assets/icons/loc.png';
 
-const SearchBar = () => {
-  const [searchText, setSearchText] = useState('');
-  const navigation = useNavigation();
-
-  const handleSubmit = () => {
-    if (searchText.trim().length > 0) {
-      navigation.navigate('Transport', { searchQuery: searchText });
-    }
-  };
-
+const SearchBar = ({ query, onQueryChange, onSearchSubmit }) => {
   return (
     <View style={globalStyles.searchContainer}>
       <TextInput
         style={globalStyles.searchInput}
-        placeholder="Para onde deseja ir?"
+        placeholder="Pesquisar estação ou parada..."
         placeholderTextColor="#8c8c8c"
-        value={searchText}
-        onChangeText={setSearchText}
-        onSubmitEditing={handleSubmit} 
+        value={query}
+        onChangeText={onQueryChange}
+        onSubmitEditing={onSearchSubmit} 
         returnKeyType="search"
       />
       <Image source={locIcon} style={globalStyles.searchIcon} />
