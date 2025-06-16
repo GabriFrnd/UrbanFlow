@@ -4,11 +4,31 @@
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    
+    "plugins": [
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZGF2aWl6biIsImEiOiJjbWJ6ZzJjNXMwaXd0Mmxwem1ia3E3YXlvIn0.tlnCDwZmPRuuvwI7CmsBQg"
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Precisamos da sua localização para centralizar o mapa e mostrar as melhores rotas."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-    
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,12 +37,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.myapp"
     },
-    "web": {
-      
-    }
+    "web": {}
   }
 }
