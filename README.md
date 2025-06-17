@@ -5,12 +5,12 @@ Aplicativo mobile de mobilidade urbana desenvolvido em **React Native** com **Ex
 ---
 
 # Integrantes do Projeto
-1. **Davi Serra Bezerra**  
-2. **David Lopes Bezerra de Oliveira**  
-3. **Gabriel Fernandes Feitosa**  
-4. **Gabrielle Arruda Rodrigues**  
-5. **Guilherme Tempesta Francisco**  
-6. **Gustavo Luiz dos Santos Faria**  
+1. **Davi Serra Bezerra - Matrícula: 2312130031**
+2. **David Lopes Bezerra de Oliveira - Matrícula: 2312130068**
+3. **Gabriel Fernandes Feitosa - Matrícula: 2312130103**
+4. **Gabrielle Arruda Rodrigues - Matrícula: 2312130129**
+5. **Guilherme Tempesta Francisco - Matrícula: 2312130221**
+6. **Gustavo Luiz dos Santos Faria - Matrícula: 2312130014**
 
 ---
 
