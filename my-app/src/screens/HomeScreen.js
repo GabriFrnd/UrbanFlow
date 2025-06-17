@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Keyboard,
-  SafeAreaView // Importe o SafeAreaView
+  SafeAreaView
 } from 'react-native';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
@@ -18,7 +18,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { busStops, metroStations, bikePoints } from '../data/mapPoints';
 
-// Combinando todos os pontos para a busca
 const allPoints = [
   ...busStops.map(p => ({ ...p, type: 'onibus' })),
   ...metroStations.map(p => ({ ...p, type: 'metro' })),
@@ -39,23 +38,20 @@ const HomeScreen = () => {
     const filteredResults = allPoints.filter(p =>
       p.title.toLowerCase().includes(lowerCaseQuery)
     );
-    setSearchResults(filteredResults.slice(0, 5)); // Limita a 5 resultados
+    setSearchResults(filteredResults.slice(0, 5));
   }, [searchText]);
 
   const handleResultPress = (point) => {
-    setSearchText(''); // Limpa a busca
+    setSearchText('');
     Keyboard.dismiss();
-    // Navega para a tela de mapa, passando o ponto selecionado como parâmetro
     navigation.navigate('Transport', { initialPoint: point });
   };
 
   return (
-    // Utilize o SafeAreaView como container principal da tela
     <SafeAreaView style={styles.safeArea}>
       <View style={globalStyles.container}>
         <Header />
         
-        {/* Container da Busca e Resultados */}
         <View style={styles.searchAreaContainer}>
           <SearchBar
             query={searchText}
@@ -92,10 +88,9 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  // Adicione este estilo para o SafeAreaView
   safeArea: {
     flex: 1,
-    backgroundColor: '#EAE2D6', // Garante a cor de fundo correta na área da status bar
+    backgroundColor: '#EAE2D6',
   },
   searchAreaContainer: {
     zIndex: 10,

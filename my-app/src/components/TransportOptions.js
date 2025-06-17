@@ -3,7 +3,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 
 const TransportOptions = () => {
-  // O hook useNavigation() obtém o acesso à navegação diretamente
   const navigation = useNavigation(); 
 
   /**
@@ -16,7 +15,6 @@ const TransportOptions = () => {
 
   return (
     <View style={styles.container}>
-      {/* O título agora também é clicável para mostrar todos os pontos */}
       <TouchableOpacity onPress={() => handlePress(null)}>
         <Text style={styles.title}>Opções de Transporte</Text>
       </TouchableOpacity>

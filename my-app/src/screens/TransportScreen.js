@@ -199,7 +199,6 @@ const TransportScreen = ({ navigation, route }) => {
         if (initialPoint) {
           setMapCenter(initialPoint.coords);
           setSelectedTransport(initialPoint.type);
-          // Passa as coordenadas do usuário obtidas agora mesmo
           fetchRouteForPreview(userCoords, initialPoint.coords, initialPoint.title, initialPoint.id, false);
         } else {
           setMapCenter(userCoords);

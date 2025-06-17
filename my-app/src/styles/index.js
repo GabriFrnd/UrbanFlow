@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
   container: {
-    // marginTop: 4, // Esta linha foi removida
     flex: 1,
     backgroundColor: '#EAE2D6',
     padding: 16,

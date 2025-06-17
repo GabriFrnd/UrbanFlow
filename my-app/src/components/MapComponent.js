@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 
-// Importa os ícones da pasta de assets
 import metroIcon from '../assets/icons/metro.png';
 import busIcon from '../assets/icons/onibus.png';
 import bikeIcon from '../assets/icons/bicicleta.png';
@@ -35,7 +34,6 @@ const MapComponent = ({
   const metroStationsGeoJSON = toGeoJSON(metroStations);
   const bikePointsGeoJSON = toGeoJSON(bikePoints);
 
-  // Estilo para os ícones principais (tamanho padrão unificado)
   const iconStyle = (iconName, size = 0.5) => ({
     iconImage: iconName,
     iconSize: size,
@@ -43,7 +41,6 @@ const MapComponent = ({
     iconIgnorePlacement: true,
   });
 
-  // Estilo para a borda de seleção
   const borderStyle = {
     circleRadius: 13,
     circleColor: 'transparent',
@@ -119,7 +116,6 @@ const MapComponent = ({
         </Mapbox.ShapeSource>
       )}
 
-      {/* Camada de Metrô: Borda + Ícone */}
       {(selectedTransport === 'metro' || !selectedTransport) && (
         <Mapbox.ShapeSource id="metro-source" shape={metroStationsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
           <Mapbox.CircleLayer id="metro-border" style={borderStyle} />
@@ -127,7 +123,6 @@ const MapComponent = ({
         </Mapbox.ShapeSource>
       )}
 
-      {/* Camada de Ônibus: Borda + Ícone */}
       {(selectedTransport === 'onibus' || !selectedTransport) && (
         <Mapbox.ShapeSource id="bus-source" shape={busStopsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
           <Mapbox.CircleLayer id="bus-border" style={borderStyle} />
@@ -135,7 +130,6 @@ const MapComponent = ({
         </Mapbox.ShapeSource>
       )}
       
-      {/* Camada de Bicicleta: Borda + Ícone */}
       {(selectedTransport === 'bike' || !selectedTransport) && (
         <Mapbox.ShapeSource id="bike-source" shape={bikePointsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
            <Mapbox.CircleLayer id="bike-border" style={borderStyle} />
