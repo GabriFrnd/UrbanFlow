@@ -1,24 +1,40 @@
 export const busStops = [
   {
-    id: "bus7",
+    id: "bus613s",
     coords: [-47.91157737229597, -15.833186364774098],
-    title: "SGAS II St. de Grandes Áreas Sul 613",
+    title: "Parada de Onibus - 613 Sul",
   },
   {
-    id: "bus8",
+    id: "bus413s",
     coords: [-47.91221037358141, -15.833072825105532],
-    title: "Asa Sul Superquadra Sul 413",
+    title: "Parada de Onibus - 413 Sul",
   },
   {
-    id: "bus9",
+    id: "bus612s",
     coords: [-47.90857329834266, -15.831431653657159],
-    title: "SGAS II St. de Grandes Áreas Sul 612",
+    title: "Parada de Onibus - 612 Sul",
   },
   {
-    id: "bus10",
+    id: "bus412s",
     coords: [-47.909270672640176, -15.831060065822827],
-    title: "Asa Sul Superquadra Sul 412",
+    title: "Parada de Onibus - 412 Sul",
   },
+  {
+    id: "busL2Ligacaos",
+    coords: [-47.921042346272785, -15.841037859876709],
+    title: "Parada de Onibus - Ligação L2 Sul",
+  },
+  {
+    id: "bus315/316s",
+    coords: [-47.926780425471094, -15.827516972450466],
+    title: "Parada de Onibus - 315/316 Sul"
+
+  },
+  {
+    id: "bus713s",
+    coords: [-47.92132110217368, -15.823143818956032],
+    title: "Parada de Onibus - 713 Sul"
+  }
 ];
 
 export const metroStations = [
@@ -58,21 +74,36 @@ export const bikePoints = [
   {
     id: "bike1",
     coords: [-47.895657695349506, -15.79365964090472],
-    title: "Srps 6443+CF",
+    title: "Ponto de Biciclera - Parque Ana Lídia",
   },
   {
     id: "bike2",
     coords: [-47.90215278051381, -15.797059921914723],
-    title: "Srps - Plano Piloto, Brasília",
+    title: "Ponto de Bicicleta - Praça do Ciclista",
   },
   {
     id: "bike3",
     coords: [-47.890777119477406, -15.791125948733896],
-    title: "255, SHN",
+    title: "Ponto de Bicicleta - Torre de TV",
   },
   {
     id: "bike4",
     coords: [-47.86997562979002, -15.797804714656671],
-    title: "Brasília, DF",
+    title: "Ponto de Bicicleta - Esplanada dos Ministérios",
   },
+  {
+    id: "bike5",
+    coords: [-47.890971757671046, -15.81275356635541],
+    title: "Ponto de Bicileta - EQS 204/205 Sul"
+  },
+  {
+    id: "bike6",
+    coords: [-47.89878235084367, -15.819669743298464],
+    title: "Ponto de Bicileta - 207 Sul"
+  },
+  {
+    id: "bike7",
+    coords: [-47.90281213335517, -15.814285797105036],
+    title: "Ponto de Bicileta - Igrejinha Asa Sul"
+  }
 ];

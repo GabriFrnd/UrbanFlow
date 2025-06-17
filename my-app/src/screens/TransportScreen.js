@@ -11,7 +11,7 @@ import { point } from '@turf/helpers';
 import MapComponent from '../components/MapComponent';
 import { busStops, metroStations, bikePoints } from '../data/mapPoints';
 
-const fallbackCoords = [-15.8359, -47.9138];
+const fallbackCoords = [-47.9138, -15.8359];
 
 const formatDuration = (seconds) => {
   return `${Math.round(seconds / 60)} min`;
