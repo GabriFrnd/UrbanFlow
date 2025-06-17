@@ -3,15 +3,23 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 
 const TransportOptions = () => {
+  // O hook useNavigation() obtém o acesso à navegação diretamente
   const navigation = useNavigation(); 
 
-  const handlePress = (transportType) => {
-    navigation.navigate('Transport', { selectedTransport: transportType });
+  /**
+   * Navega para a tela de transporte, passando um filtro inicial.
+   * @param {string | null} filter - O tipo de transporte para filtrar ('metro', 'onibus', 'bike') ou null para mostrar todos.
+   */
+  const handlePress = (filter) => {
+    navigation.navigate('Transport', { initialFilter: filter });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Opções de Transporte</Text>
+      {/* O título agora também é clicável para mostrar todos os pontos */}
+      <TouchableOpacity onPress={() => handlePress(null)}>
+        <Text style={styles.title}>Opções de Transporte</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.option} onPress={() => handlePress('metro')}>
         <Image source={require('../assets/icons/metro.png')} style={styles.icon} />

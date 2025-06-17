@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator, Alert, Keyboard, FlatList } from 'react-native';
-import Button from '../components/Button';
 import SearchBar from '../components/SearchBar';
 import { globalStyles } from '../styles';
 import * as Location from 'expo-location';
@@ -31,18 +30,20 @@ const allPoints = [
   ...bikePoints.map(p => ({ ...p, type: 'bike' })),
 ];
 
-const TransportScreen = ({ navigation }) => {
-  const [selectedTransport, setSelectedTransport] = useState('metro');
-  const [initialLocation, setInitialLocation] = useState(null);
+const TransportScreen = ({ navigation, route }) => {
+  const initialFilter = route.params?.initialFilter;
+  const initialPoint = route.params?.initialPoint;
+
+  const [selectedTransport, setSelectedTransport] = useState(initialFilter);
+  const [userLocation, setUserLocation] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
   const [cameraBounds, setCameraBounds] = useState(null);
-  const [route, setRoute] = useState(null);
+  const [activeRoute, setActiveRoute] = useState(null);
   const [previewRoute, setPreviewRoute] = useState(null);
   const [isNavigating, setIsNavigating] = useState(false);
   const [previewedRouteInfo, setPreviewedRouteInfo] = useState(null);
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   
-  // Novos estados para a busca
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
@@ -52,7 +53,6 @@ const TransportScreen = ({ navigation }) => {
     { id: 'bike', name: 'Bicicleta' }
   ];
 
-  // Efeito para a busca em tempo real
   useEffect(() => {
     if (searchText.trim() === '') {
       setSearchResults([]);
@@ -62,15 +62,15 @@ const TransportScreen = ({ navigation }) => {
     const filteredResults = allPoints.filter(p =>
       p.title.toLowerCase().includes(lowerCaseQuery)
     );
-    setSearchResults(filteredResults.slice(0, 5)); // Limita a 5 resultados
+    setSearchResults(filteredResults.slice(0, 5));
   }, [searchText]);
 
 
   const findAndPanToNearest = (transportType) => {
-    if (!initialLocation) return;
+    if (!userLocation) return;
     const pointsToSearch = { metro: metroStations, onibus: busStops, bike: bikePoints }[transportType];
     if (!pointsToSearch || pointsToSearch.length === 0) return;
-    const from = point(initialLocation);
+    const from = point(userLocation);
     let nearestPoint = null;
     let minDistance = Infinity;
     pointsToSearch.forEach(p => {
@@ -88,23 +88,29 @@ const TransportScreen = ({ navigation }) => {
   };
   
   const handleTransportSelection = (transportType) => {
-    setSelectedTransport(transportType);
-    findAndPanToNearest(transportType);
+    if (selectedTransport === transportType) {
+      setSelectedTransport(null);
+      setMapCenter(userLocation);
+      setCameraBounds(null);
+    } else {
+      setSelectedTransport(transportType);
+      findAndPanToNearest(transportType);
+    }
+    clearPreview();
   };
 
   const clearPreview = () => {
     setPreviewedRouteInfo(null);
     setPreviewRoute(null);
     setCameraBounds(null);
-    setMapCenter(initialLocation);
-  }
+  };
 
-  const fetchRouteForPreview = async (destinationCoords, title, id) => {
+  const fetchRouteForPreview = async (origin, destinationCoords, title, id, setBounds = true) => {
     Keyboard.dismiss();
     setIsLoadingPreview(true);
     clearPreview();
     const profile = 'walking';
-    const origin = initialLocation;
+    
     if (!origin) {
       setIsLoadingPreview(false);
       return;
@@ -121,9 +127,11 @@ const TransportScreen = ({ navigation }) => {
           duration: routeData.duration, distance: routeData.distance, title: title
         });
         setPreviewRoute(routeData.geometry);
-        const sw = [Math.min(origin[0], destinationCoords[0]), Math.min(origin[1], destinationCoords[1])];
-        const ne = [Math.max(origin[0], destinationCoords[0]), Math.max(origin[1], destinationCoords[1])];
-        setCameraBounds({ sw, ne });
+        if (setBounds) {
+          const sw = [Math.min(origin[0], destinationCoords[0]), Math.min(origin[1], destinationCoords[1])];
+          const ne = [Math.max(origin[0], destinationCoords[0]), Math.max(origin[1], destinationCoords[1])];
+          setCameraBounds({ sw, ne });
+        }
       } else {
         Alert.alert("Erro", "Não foi possível encontrar uma rota para este destino.");
       }
@@ -136,9 +144,13 @@ const TransportScreen = ({ navigation }) => {
   };
 
   const handleResultPress = (point) => {
-    setSearchText(''); // Limpa a busca e os resultados
+    setSearchText(''); 
     setSelectedTransport(point.type);
-    fetchRouteForPreview(point.coords, point.title, point.id);
+    
+    setMapCenter(point.coords);
+    setCameraBounds(null);
+
+    fetchRouteForPreview(userLocation, point.coords, point.title, point.id, false);
   };
   
   const onPointPress = async (event) => {
@@ -146,44 +158,81 @@ const TransportScreen = ({ navigation }) => {
     const feature = event.features[0];
     const destinationCoords = feature.geometry.coordinates;
     const { title, id } = feature.properties;
-    await fetchRouteForPreview(destinationCoords, title, id);
+    await fetchRouteForPreview(userLocation, destinationCoords, title, id, true);
   };
 
   const handleStartNavigation = () => {
     if (previewedRouteInfo) {
-      setRoute(previewedRouteInfo.geometry);
+      setActiveRoute(previewedRouteInfo.geometry);
       setIsNavigating(true);
       clearPreview();
     }
   };
   
   const exitNavigation = () => {
-    setRoute(null);
+    setActiveRoute(null);
     setIsNavigating(false);
     clearPreview();
-    setMapCenter(initialLocation);
+    setMapCenter(userLocation);
   };
 
   useEffect(() => {
+    let locationWatcher;
+    let isMounted = true;
+
     const requestLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setInitialLocation(fallbackCoords);
-        setMapCenter(fallbackCoords);
+        if(isMounted) {
+          setUserLocation(fallbackCoords);
+          setMapCenter(fallbackCoords);
+        }
         return;
       }
+      
       let location = await Location.getCurrentPositionAsync({});
       const userCoords = [location.coords.longitude, location.coords.latitude];
-      setInitialLocation(userCoords);
-      setMapCenter(userCoords);
-      findAndPanToNearest('metro');
+      
+      if (isMounted) {
+        setUserLocation(userCoords);
+
+        if (initialPoint) {
+          setMapCenter(initialPoint.coords);
+          setSelectedTransport(initialPoint.type);
+          // Passa as coordenadas do usuário obtidas agora mesmo
+          fetchRouteForPreview(userCoords, initialPoint.coords, initialPoint.title, initialPoint.id, false);
+        } else {
+          setMapCenter(userCoords);
+          if (initialFilter) {
+            findAndPanToNearest(initialFilter); 
+          }
+        }
+      }
+
+      locationWatcher = await Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.High, timeInterval: 3000, distanceInterval: 5 },
+        (newLocation) => {
+          if (newLocation.coords && isMounted) {
+            const newUserCoords = [newLocation.coords.longitude, newLocation.coords.latitude];
+            setUserLocation(newUserCoords);
+          }
+        }
+      );
     };
+
     requestLocation();
+
+    return () => {
+      isMounted = false;
+      if (locationWatcher) {
+        locationWatcher.remove();
+      }
+    };
   }, []);
 
   const selectedPointId = previewedRouteInfo ? previewedRouteInfo.id : null;
 
-  if (!initialLocation) {
+  if (!userLocation) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#92703B" />
@@ -196,28 +245,44 @@ const TransportScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <MapComponent
-          userLocation={initialLocation} centerCoordinate={mapCenter} bounds={cameraBounds}
+          userLocation={userLocation} centerCoordinate={mapCenter} bounds={cameraBounds}
           busStops={busStops} metroStations={metroStations} bikePoints={bikePoints}
           selectedTransport={selectedTransport} selectedPointId={selectedPointId}
-          route={route} previewRoute={previewRoute}
+          route={activeRoute}
+          previewRoute={previewRoute}
           isNavigating={isNavigating} onPointPress={onPointPress}
         />
 
         <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
           {!isNavigating && !previewedRouteInfo && (
-            <View style={styles.uiContainer}>
+            <View style={globalStyles.floatingMenuContainer} pointerEvents="auto">
               <View style={globalStyles.headerContainerTransparent}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={globalStyles.closeButton} pointerEvents="auto">
+                <TouchableOpacity onPress={() => navigation.goBack()} style={globalStyles.closeButton}>
                   <Text style={globalStyles.closeText}>×</Text>
                 </TouchableOpacity>
                 <Text style={globalStyles.screenTitle}>Mapa</Text>
               </View>
-              <View style={globalStyles.buttonBackgroundContainer} pointerEvents="auto">
-                <View style={globalStyles.transportButtonRow}>
-                  {transportOptions.map((transport) => (
-                    <Button key={transport.id} title={transport.name} onPress={() => handleTransportSelection(transport.id)} style={globalStyles.transportButton} textStyle={globalStyles.transportButtonText} />
-                  ))}
-                </View>
+              <View style={globalStyles.transportButtonRow}>
+                {transportOptions.map((transport) => {
+                  const isSelected = selectedTransport === transport.id;
+                  return (
+                    <TouchableOpacity
+                      key={transport.id}
+                      onPress={() => handleTransportSelection(transport.id)}
+                      style={[
+                        globalStyles.transportButton,
+                        isSelected ? globalStyles.transportButtonActive : globalStyles.transportButtonInactive
+                      ]}
+                    >
+                      <Text style={[
+                        globalStyles.transportButtonText,
+                        isSelected ? globalStyles.transportButtonTextActive : globalStyles.transportButtonTextInactive
+                      ]}>
+                        {transport.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
           )}
@@ -232,12 +297,18 @@ const TransportScreen = ({ navigation }) => {
           )}
 
           {!isNavigating && (
-            <TouchableOpacity style={styles.recenterButton} onPress={() => setMapCenter(initialLocation)} pointerEvents="auto" >
+            <TouchableOpacity 
+              style={styles.recenterButton} 
+              onPress={() => {
+                setMapCenter(userLocation);
+                setCameraBounds(null);
+              }} 
+              pointerEvents="auto"
+            >
               <MaterialIcons name="my-location" size={24} color="#333" />
             </TouchableOpacity>
           )}
 
-          {/* Container para a lista de resultados da busca */}
           {searchResults.length > 0 && !previewedRouteInfo && (
             <View style={styles.searchResultsContainer} pointerEvents="auto">
                 <FlatList
@@ -273,7 +344,13 @@ const TransportScreen = ({ navigation }) => {
                 <TouchableOpacity style={styles.startButton} onPress={handleStartNavigation}>
                   <Text style={styles.startButtonText}>Iniciar Percurso</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelButton} onPress={clearPreview}>
+                <TouchableOpacity 
+                  style={styles.cancelButton} 
+                  onPress={() => {
+                    clearPreview();
+                    setMapCenter(userLocation);
+                  }}
+                >
                   <Text style={styles.cancelButtonText}>Cancelar</Text>
                 </TouchableOpacity>
               </View>
@@ -294,10 +371,8 @@ const TransportScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  // ... (estilos anteriores)
   safeArea: { flex: 1, backgroundColor: '#EAE2D6' },
   container: { flex: 1 },
-  uiContainer: { paddingHorizontal: 16 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#EAE2D6' },
   loadingText: { marginTop: 10, fontSize: 16, color: '#000' },
   recenterButton: {

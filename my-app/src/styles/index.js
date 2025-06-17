@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const globalStyles = StyleSheet.create({
   container: {
-    marginTop: 4,
+    // marginTop: 4, // Esta linha foi removida
     flex: 1,
     backgroundColor: '#EAE2D6',
     padding: 16,
@@ -66,7 +66,7 @@ export const globalStyles = StyleSheet.create({
   transportTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#92703B',
+    color: '#8b5e3c',
     marginBottom: 10,
   },
   favoritesContainer: {
@@ -78,10 +78,7 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 5,
   },
-  routeTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },transportScreenTitle: {
+  transportScreenTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 30,
@@ -89,16 +86,13 @@ export const globalStyles = StyleSheet.create({
     textAlign: 'center',
   },
   transportOption: {
-    backgroundColor: '#C2A477',
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   transportOptionText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     color: '#000',
-    textAlign: 'center',
   },
   transportDivider: {
     height: 1,
@@ -118,23 +112,57 @@ export const globalStyles = StyleSheet.create({
     padding: 15,
     marginVertical: 10,
   },
+  floatingMenuContainer: {
+    position: 'absolute',
+    top: 50,
+    left: 16,
+    right: 16,
+    backgroundColor: 'rgba(245, 238, 220, 0.95)',
+    borderRadius: 22,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  headerContainerTransparent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
   transportButtonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 20,
-    gap: 10,
+    marginVertical: 4,
+    gap: 8,
   },
   transportButton: {
     flex: 1,
-    backgroundColor: '#C2A477',
-    borderRadius: 20,
+    paddingVertical: 10,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  transportButtonActive: {
+    backgroundColor: '#92703B',
+  },
+  transportButtonInactive: {
+    backgroundColor: '#EAE2D6',
   },
   transportButtonText: {
-    fontSize: 16,
-    color: '#000',
+    fontSize: 15,
     fontFamily: 'Kantumruy Pro',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  transportButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  transportButtonTextInactive: {
+    color: '#574D41',
   },
   searchTransportContainer: {
     marginTop: 'auto',
@@ -144,27 +172,12 @@ export const globalStyles = StyleSheet.create({
     padding: '5%',
     backgroundColor: '#C2A477'
   },
-  buttonBackgroundContainer: {
-    padding: '0.2%',
-    backgroundColor: '#C2A477',
-    marginTop: '1%',
-    marginLeft: '2%', 
-    marginRight: '2%',
-    borderRadius: 25,
-  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#EAE2D6',
-  },
-
-  headerContainerTransparent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
   },
 
   closeButton: {

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, FlatList, Text, TouchableOpacity, Keyboard } from 'react-native';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  SafeAreaView // Importe o SafeAreaView
+} from 'react-native';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import TransportOptions from '../components/TransportOptions';
@@ -41,53 +50,61 @@ const HomeScreen = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Header />
-      
-      {/* Container da Busca e Resultados */}
-      <View style={styles.searchAreaContainer}>
-        <SearchBar
-          query={searchText}
-          onQueryChange={setSearchText}
-          onSearchSubmit={() => {
-            if (searchResults.length > 0) {
-              handleResultPress(searchResults[0]);
-            }
-          }}
-        />
-        {searchResults.length > 0 && (
-          <View style={styles.searchResultsContainer}>
-            <FlatList
-              data={searchResults}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.resultItem} onPress={() => handleResultPress(item)}>
-                  <Text>{item.title}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item.id}
-              keyboardShouldPersistTaps="handled" // Permite clicar nos itens com o teclado aberto
-            />
-          </View>
-        )}
+    // Utilize o SafeAreaView como container principal da tela
+    <SafeAreaView style={styles.safeArea}>
+      <View style={globalStyles.container}>
+        <Header />
+        
+        {/* Container da Busca e Resultados */}
+        <View style={styles.searchAreaContainer}>
+          <SearchBar
+            query={searchText}
+            onQueryChange={setSearchText}
+            onSearchSubmit={() => {
+              if (searchResults.length > 0) {
+                handleResultPress(searchResults[0]);
+              }
+            }}
+          />
+          {searchResults.length > 0 && (
+            <View style={styles.searchResultsContainer}>
+              <FlatList
+                data={searchResults}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.resultItem} onPress={() => handleResultPress(item)}>
+                    <Text>{item.title}</Text>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.id}
+                keyboardShouldPersistTaps="handled"
+              />
+            </View>
+          )}
+        </View>
+        
+        <ScrollView>
+          <TransportOptions />
+          <FavoriteRoutes />
+        </ScrollView>
       </View>
-      
-      <ScrollView>
-        <TransportOptions />
-        <FavoriteRoutes />
-      </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  // Adicione este estilo para o SafeAreaView
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#EAE2D6', // Garante a cor de fundo correta na área da status bar
+  },
   searchAreaContainer: {
-    zIndex: 10, // Garante que a área de busca fique sobre o conteúdo do ScrollView
+    zIndex: 10,
   },
   searchResultsContainer: {
     backgroundColor: 'white',
     borderRadius: 8,
     marginHorizontal: 1, 
-    marginTop: -8, // Cobre a borda da SearchBar
+    marginTop: -8,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     elevation: 5,

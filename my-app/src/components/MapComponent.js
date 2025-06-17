@@ -2,6 +2,11 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 
+// Importa os ícones da pasta de assets
+import metroIcon from '../assets/icons/metro.png';
+import busIcon from '../assets/icons/onibus.png';
+import bikeIcon from '../assets/icons/bicicleta.png';
+
 export const toGeoJSON = (points = []) => ({
   type: 'FeatureCollection',
   features: points.map(point => ({
@@ -14,7 +19,7 @@ export const toGeoJSON = (points = []) => ({
 const MapComponent = ({
   userLocation,
   centerCoordinate,
-  bounds, // Nova prop com os limites para o zoom
+  bounds,
   busStops,
   metroStations,
   bikePoints,
@@ -30,14 +35,27 @@ const MapComponent = ({
   const metroStationsGeoJSON = toGeoJSON(metroStations);
   const bikePointsGeoJSON = toGeoJSON(bikePoints);
 
-  const highlightStyle = (defaultColor) => ({
-    circleRadius: ['case', ['==', ['get', 'id'], selectedPointId || ''], 12, 8],
-    circleColor: defaultColor,
-    circleStrokeColor: '#000',
-    circleStrokeWidth: ['case', ['==', ['get', 'id'], selectedPointId || ''], 3, 0],
+  // Estilo para os ícones principais (tamanho padrão unificado)
+  const iconStyle = (iconName, size = 0.5) => ({
+    iconImage: iconName,
+    iconSize: size,
+    iconAllowOverlap: true,
+    iconIgnorePlacement: true,
   });
 
-  // Função para decidir a configuração da câmera
+  // Estilo para a borda de seleção
+  const borderStyle = {
+    circleRadius: 13,
+    circleColor: 'transparent',
+    circleStrokeColor: 'black',
+    circleStrokeWidth: [
+        'case',
+        ['==', ['get', 'id'], selectedPointId || ''],
+        2.5,
+        0,
+    ],
+  };
+
   const getCameraConfig = () => {
     if (isNavigating) {
       return {
@@ -51,8 +69,8 @@ const MapComponent = ({
     }
     if (bounds) {
       return {
-        fitBounds: [bounds.ne, bounds.sw], // Ajusta a câmera aos limites da rota
-        padding: { paddingTop: 100, paddingBottom: 280, paddingLeft: 50, paddingRight: 50 }, // Margens
+        fitBounds: [bounds.ne, bounds.sw],
+        padding: { paddingTop: 100, paddingBottom: 280, paddingLeft: 50, paddingRight: 50 },
         animationMode: 'flyTo',
         animationDuration: 1200,
       };
@@ -70,26 +88,10 @@ const MapComponent = ({
     <Mapbox.MapView style={styles.map} styleURL={Mapbox.StyleURL.Streets} scaleBarEnabled={false}>
       <Mapbox.Camera {...getCameraConfig()} />
 
+      <Mapbox.Images images={{ metro: metroIcon, onibus: busIcon, bike: bikeIcon }} />
+
       <Mapbox.UserLocation />
-
-      {selectedTransport === 'onibus' && (
-        <Mapbox.ShapeSource id="bus-source" shape={busStopsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-          <Mapbox.CircleLayer id="bus-circles" style={highlightStyle('blue')} />
-        </Mapbox.ShapeSource>
-      )}
-
-      {selectedTransport === 'metro' && (
-        <Mapbox.ShapeSource id="metro-source" shape={metroStationsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-          <Mapbox.CircleLayer id="metro-circles" style={highlightStyle('green')} />
-        </Mapbox.ShapeSource>
-      )}
-
-      {selectedTransport === 'bike' && (
-        <Mapbox.ShapeSource id="bike-source" shape={bikePointsGeoJSON} onPress={onPointPress} hitbox={{ width: 20, height: 20 }}>
-          <Mapbox.CircleLayer id="bike-circles" style={highlightStyle('red')} />
-        </Mapbox.ShapeSource>
-      )}
-
+      
       {previewRoute && !isNavigating && (
         <Mapbox.ShapeSource id="preview-route-source" shape={previewRoute}>
           <Mapbox.LineLayer
@@ -114,6 +116,30 @@ const MapComponent = ({
               lineOpacity: 0.84,
             }}
           />
+        </Mapbox.ShapeSource>
+      )}
+
+      {/* Camada de Metrô: Borda + Ícone */}
+      {(selectedTransport === 'metro' || !selectedTransport) && (
+        <Mapbox.ShapeSource id="metro-source" shape={metroStationsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
+          <Mapbox.CircleLayer id="metro-border" style={borderStyle} />
+          <Mapbox.SymbolLayer id="metro-symbols" style={iconStyle('metro')} />
+        </Mapbox.ShapeSource>
+      )}
+
+      {/* Camada de Ônibus: Borda + Ícone */}
+      {(selectedTransport === 'onibus' || !selectedTransport) && (
+        <Mapbox.ShapeSource id="bus-source" shape={busStopsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
+          <Mapbox.CircleLayer id="bus-border" style={borderStyle} />
+          <Mapbox.SymbolLayer id="bus-symbols" style={iconStyle('onibus')} />
+        </Mapbox.ShapeSource>
+      )}
+      
+      {/* Camada de Bicicleta: Borda + Ícone */}
+      {(selectedTransport === 'bike' || !selectedTransport) && (
+        <Mapbox.ShapeSource id="bike-source" shape={bikePointsGeoJSON} onPress={onPointPress} hitbox={{ width: 25, height: 25 }}>
+           <Mapbox.CircleLayer id="bike-border" style={borderStyle} />
+          <Mapbox.SymbolLayer id="bike-symbols" style={iconStyle('bike')} />
         </Mapbox.ShapeSource>
       )}
     </Mapbox.MapView>
