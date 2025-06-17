@@ -1,52 +1,76 @@
-# UrbanFlow
+# UrbanFlow 🚇🚌🚲
 
-## Integrantes do Projeto
-1. **Davi Serra Bezerra**  
-2. **David Lopes Bezerra de Oliveira**  
-3. **Gabriel Fernandes Feitosa**  
-4. **Gabrielle Arruda Rodrigues**  
-5. **Guilherme Tempesta Francisco**  
-6. **Gustavo Luiz dos Santos Faria**  
+Aplicativo mobile de mobilidade urbana desenvolvido em **React Native** com **Expo**, focado na exibição de meios de transporte disponíveis em tempo real em um mapa interativo.
 
 ---
 
-## Descrição do Projeto
-**UrbanFlow** é uma aplicação voltada para a **melhoria da mobilidade urbana**, auxiliando os usuários a traçarem rotas para estações de metrô e/ou paradas de ônibus marcadas.  
-O objetivo principal é contribuir para uma cidade mais acessível e eficiente, oferecendo rotas para pedestres com base no sistema de GPS, atendendo diferentes necessidades.
+# Integrantes do Projeto
+1. **Davi Serra Bezerra - Matrícula: 2312130031**
+2. **David Lopes Bezerra de Oliveira - Matrícula: 2312130068**
+3. **Gabriel Fernandes Feitosa - Matrícula: 2312130103**
+4. **Gabrielle Arruda Rodrigues - Matrícula: 2312130129**
+5. **Guilherme Tempesta Francisco - Matrícula: 2312130221**
+6. **Gustavo Luiz dos Santos Faria - Matrícula: 2312130014**
 
 ---
 
-## Funcionalidades
-- Busca de rotas para pedestres até destinos marcados pelo usuário.  
-- Integração com **API de Mapas** (Google Maps ou OpenStreetMap) para visualização interativa.  
-- Localização em tempo real via **GPS**.  
+## 📱 Plataforma alvo
+
+> Este projeto está configurado e otimizado para rodar exclusivamente em **dispositivos Android** (emulador ou aparelho físico via USB).
 
 ---
 
-## Tecnologias Utilizadas
-- **Front-end (Mobile):** React Native  
-- **Back-end:** Java / Node.js  
-- **Banco de Dados:** SQL  
+## 📌 Funcionalidades principais
+
+- 📍 Exibição de mapa interativo com localização atual do usuário.
+- 🚏 Visualização de pontos de transporte público (ônibus, metrô, bicicletas, etc).
+- 🔍 Campo de busca para pesquisar locais.
+- 🛠️ Seleção de diferentes tipos de transporte.
+- 🗺️ Navegação e cálculo de rotas.
 
 ---
 
-## Cronograma de Desenvolvimento
+## 🛠️ Tecnologias utilizadas
 
-### 1. Estrutura Inicial e Integração de Mapas
-- Criar a estrutura básica da aplicação (configuração de roteamento e layout inicial).  
-- Integrar com API de mapas para exibição do mapa.  
-
-### 2. Implementação das Funcionalidades de Busca de Rota
-- Desenvolver telas para inserção do ponto de destino.  
-- Implementar a visualização da rota a pé no mapa.  
-- Integrar com GPS para localização em tempo real.  
-
-### 3. Testes de Usabilidade e Ajustes
-- Testar a interface para garantir um fluxo claro e intuitivo.  
-- Ajustar responsividade e usabilidade em dispositivos móveis.  
-- Realizar ajustes com base no feedback da equipe ou de usuários internos.  
+- **React Native**
+- **Expo SDK**
+- **JavaScript**
+- **Mapbox Maps**
 
 ---
 
-## Contato
-Para dúvidas ou sugestões, entre em contato com qualquer integrante do projeto.  
+## ▶️ Como executar o projeto no Android
+
+### Pré-requisitos:
+
+- **Node.js** instalado ([Download Node.js](https://nodejs.org/))
+- **Android Studio** com um **emulador Android configurado**  
+**ou**  
+Um **dispositivo Android com Depuração USB ativada**
+- **Expo CLI** instalado globalmente:
+
+npm install -g expo-cli
+
+### 1. Clonar o Repositório
+
+* git clone https://github.com/GabriFrnd/UrbanFlow.git
+
+### 2. Acesse a pasta do projeto:
+
+* cd my-app
+
+### 3. Limpe o cache do npm (para evitar conflitos de dependências):
+
+* npm cache clean --force
+
+### 4. Instale as dependências do projeto:
+
+* npm install
+
+### 5. Corrija automaticamente possíveis incompatibilidades de versões com o Expo:
+
+* npx expo install --fix
+
+### 6. Execute o projeto diretamente no Android:
+
+* npm run android
